@@ -1,4 +1,4 @@
-# to-choices [![NPM version](https://badge.fury.io/js/to-choices.svg)](http://badge.fury.io/js/to-choices)  [![Build Status](https://travis-ci.org/jonschlinkert/to-choices.svg)](https://travis-ci.org/jonschlinkert/to-choices)
+# to-choices [![NPM version](https://badge.fury.io/js/to-choices.svg)](http://badge.fury.io/js/to-choices)  [![Build Status](https://travis-ci.org/generate/to-choices.svg)](https://travis-ci.org/generate/to-choices)
 
 > Generate an inquirer choices question from an array.
 
@@ -68,7 +68,7 @@ $ npm i -d && npm test
 
 ## Contributing
 
-Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/jonschlinkert/to-choices/issues/new).
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/generate/to-choices/issues/new).
 
 ## Author
 
