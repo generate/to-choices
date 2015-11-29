@@ -19,9 +19,21 @@
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ansi-gray": "^0.1.1",
+    "extend-shallow": "^2.0.1",
+    "isobject": "^2.0.0"
+  },
   "devDependencies": {
+    "inquirer": "^0.11.0",
     "mocha": "*"
   },
-  "keywords": []
+  "verb": {
+    "related": {
+      "list": [
+        "question-store",
+        "answer-store"
+      ]
+    }
+  }
 }
