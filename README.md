@@ -1,6 +1,6 @@
 # to-choices [![NPM version](https://img.shields.io/npm/v/to-choices.svg)](https://www.npmjs.com/package/to-choices) [![Build Status](https://img.shields.io/travis/generate/to-choices.svg)](https://travis-ci.org/generate/to-choices)
 
-> Generate an inquirer choices question from an array.
+> Easily create a normalized inquirer choices question. Supports all of the `choices` question types: checkbox, list, rawlist, expand
 
 ## Install
 
@@ -10,16 +10,22 @@ Install with [npm](https://www.npmjs.com/):
 $ npm install to-choices --save
 ```
 
+## Heads up!
+
+**Breaking changes made in v02.0!**
+
+The main export now returns a function that takes an options object and, when called, returns the `toChoices` function to be usef for creating the question object.
+
 ## Usage
 
 ```js
-var toChoices = require('to-choices');
+var toChoices = require('to-choices')([options]);
 
 var question = toChoices('foo', ['a', 'b', 'c']);
 console.log(question);
 ```
 
-Results in:
+The default `type` is `checkbox`, so the above code results in:
 
 ```js
 { type: 'checkbox',
@@ -31,6 +37,39 @@ Results in:
      { name: 'a' },
      { name: 'b' },
      { name: 'c' } ] }
+```
+
+## Supported question types
+
+In addition to `checkbox`, the following types are also supported:
+
+* `expand`
+* `list`
+* `rawlist`
+
+Signature and all params are the same. Just pass the `type` to the main export.
+
+**Example**
+
+Create a `list` question:
+
+```js
+var toQuestions = require('to-choices')({type: 'list'});
+var question = toChoices('favorite color?', [
+  'red',
+  'blue',
+  'green'
+]);
+console.log(question);
+```
+
+Results in:
+
+```js
+{ type: 'list',
+  choices: [ 'red', 'blue', 'green' ],
+  name: 'favorite color',
+  message: 'favorite color' }
 ```
 
 See the [inquirer2](https://github.com/jonschlinkert/inquirer2) documentation for more details about question objects and supported properties.
