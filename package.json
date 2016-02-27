@@ -1,7 +1,7 @@
 {
   "name": "to-choices",
   "description": "Generate an inquirer choices question from an array.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/generate/to-choices",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "generate/to-choices",
