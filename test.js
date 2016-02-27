@@ -19,7 +19,7 @@ describe('to-choices', function() {
     var question = toChoices({name: 'foo', choices: ['a', 'b', 'c']});
     assert.deepEqual(question.choices, [
       { name: 'all', value: [ 'a', 'b', 'c' ] },
-      { type: 'separator', line: '\u001b[90m————\u001b[39m' },
+      { type: 'separator', line: '\u001b[90m·······\u001b[39m' },
       { name: 'a' },
       { name: 'b' },
       { name: 'c' }
@@ -30,7 +30,7 @@ describe('to-choices', function() {
     var question = toChoices('foo', ['a', 'b', 'c']);
     assert.deepEqual(question.choices, [
       { name: 'all', value: [ 'a', 'b', 'c' ] },
-      { type: 'separator', line: '\u001b[90m————\u001b[39m' },
+      { type: 'separator', line: '\u001b[90m·······\u001b[39m' },
       { name: 'a' },
       { name: 'b' },
       { name: 'c' }

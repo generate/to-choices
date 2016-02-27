@@ -55,7 +55,7 @@ function toChoices(name, message, options) {
 
   // create `all` choice
   if (len > 1 && question.all !== false) {
-    choices.unshift({line: question.separator || gray('————'), type: 'separator'});
+    choices.unshift({line: question.separator || gray('·······'), type: 'separator'});
     choices.unshift({name: 'all', value: question.choices.slice()});
   }
 
