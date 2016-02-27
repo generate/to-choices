@@ -7,7 +7,6 @@
 
 'use strict';
 
-var isObject = require('isobject');
 var merge = require('mixin-deep');
 var gray = require('ansi-gray');
 
@@ -24,57 +23,70 @@ var gray = require('ansi-gray');
  * @api public
  */
 
-function toChoices(name, message, options) {
-  if (Array.isArray(options)) {
-    return toChoices(name, message, {choices: options});
-  }
-  if (Array.isArray(message)) {
-    return toChoices(name, {choices: message}, options);
-  }
-  if (typeof message === 'string') {
-    return toChoices(name, {message: message}, options);
-  }
-  if (typeof name === 'string') {
-    return toChoices({name: name}, message, options);
-  }
+function toChoices(config) {
+  return function fn(name, message, options) {
+    if (Array.isArray(options)) {
+      return fn(name, message, {choices: options});
+    }
+    if (Array.isArray(message)) {
+      return fn(name, {choices: message}, options);
+    }
+    if (typeof message === 'string') {
+      return fn(name, {message: message}, options);
+    }
+    if (typeof name === 'string') {
+      return fn({name: name}, message, options);
+    }
 
-  var question = merge({}, choices, message, name);
-  question.type = 'checkbox';
+    var question = merge({type: 'checkbox'}, config, options, message, name);
+    if (typeof question.message === 'undefined') {
+      question.message = question.name;
+    }
 
-  if (typeof question.message === 'undefined') {
-    question.message = question.name;
-  }
+    /**
+     * Generate the list of choices
+     */
 
-  /**
-   * Generate the list of choices
-   */
+    var choices = [];
+    var len = question.choices.length;
+    var idx = -1;
 
-  var choices = [];
-  var len = question.choices.length;
-  var idx = -1;
+    // create `all` choice
+    if (len > 1 && question.all !== false && question.type === 'checkbox') {
+      choices.unshift({line: question.separator || gray('·······'), type: 'separator'});
+      choices.unshift({name: 'all', value: question.choices.slice()});
+    }
 
-  // create `all` choice
-  if (len > 1 && question.all !== false) {
-    choices.unshift({line: question.separator || gray('·······'), type: 'separator'});
-    choices.unshift({name: 'all', value: question.choices.slice()});
-  }
-
-  while (++idx < len) {
-    var ele = question.choices[idx];
-    if (typeof ele === 'string') {
-      choices.push({ name: ele });
-
-    } else if (isObject(ele)) {
+    while (++idx < len) {
+      var ele = question.choices[idx];
+      ele = toItem(ele);
       choices.push(ele);
+    }
 
+    question.choices = choices;
+    return question;
+  };
+};
+
+function toItem(ele) {
+  if (typeof ele === 'string') {
+    ele = { name: ele };
+  }
+  if (typeof ele.name === 'undefined') {
+    if (typeof ele.value !== 'undefined') {
+      ele.name = ele.value;
     } else {
-      throw new TypeError('expected choice to be a string or object:' + ele);
+      throw new Error('choice items defined as an object must have a `name` property');
     }
   }
-
-  question.choices = choices;
-  return question;
-};
+  if (typeof ele.value === 'undefined') {
+    ele.value = ele.name;
+  }
+  if (typeof ele.key === 'undefined') {
+    ele.key = ele.name[0];
+  }
+  return ele;
+}
 
 /**
  * Expose `toChoices`

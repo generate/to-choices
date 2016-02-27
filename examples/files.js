@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var toChoices = require('..');
+var toChoices = require('..')();
 
 function files(regex, dir) {
   return fs.readdirSync(dir).filter(function(fp) {

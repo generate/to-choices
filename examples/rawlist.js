@@ -1,7 +1,7 @@
 'use strict';
 
 var inquirer = require('inquirer2')();
-var toChoices = require('..')();
+var toChoices = require('..')({type: 'rawlist'});
 
 var question = toChoices('favorite color', [
   'red',
@@ -9,6 +9,6 @@ var question = toChoices('favorite color', [
   'green'
 ]);
 
-inquirer.prompt(question, function(answer) {
+inquirer.prompt([question], function(answer) {
   console.log('your favorite color is:', answer[question.name]);
 });
