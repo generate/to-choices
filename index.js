@@ -8,7 +8,7 @@
 'use strict';
 
 var isObject = require('isobject');
-var extend = require('extend-shallow');
+var merge = require('mixin-deep');
 var gray = require('ansi-gray');
 
 /**
@@ -24,49 +24,55 @@ var gray = require('ansi-gray');
  * @api public
  */
 
-function toChoices(name, options) {
-  var opts = {};
-
-  if (typeof name === 'string') {
-    opts.name = name;
-  } else if (isObject(name)) {
-    opts = extend({}, options, name);
-  }
-
+function toChoices(name, message, options) {
   if (Array.isArray(options)) {
-    opts.choices = options;
-    opts.message = opts.name + '?';
-  } else if (isObject(options)) {
-    opts = extend({}, options, name);
+    return toChoices(name, message, {choices: options});
+  }
+  if (Array.isArray(message)) {
+    return toChoices(name, {choices: message}, options);
+  }
+  if (typeof message === 'string') {
+    return toChoices(name, {message: message}, options);
+  }
+  if (typeof name === 'string') {
+    return toChoices({name: name}, message, options);
   }
 
-  if (!opts.message) {
-    opts.message = opts.name;
-  }
+  var question = merge({}, choices, message, name);
+  question.type = 'checkbox';
 
-  var question = {
-    type: 'checkbox',
-    name: opts.name,
-    message: opts.message,
-    choices: []
-  };
-
-  /**
-   * Create the `all` choice
-   */
-
-  if (opts.choices.length > 1) {
-    question.choices.push({name: 'all', value: opts.choices});
-    question.choices.push({type: 'separator', line: gray('————')});
+  if (typeof question.message === 'undefined') {
+    question.message = question.name;
   }
 
   /**
    * Generate the list of choices
    */
 
-  opts.choices.forEach(function(item) {
-    question.choices.push({ name: item });
-  });
+  var choices = [];
+  var len = question.choices.length;
+  var idx = -1;
+
+  // create `all` choice
+  if (len > 1 && question.all !== false) {
+    choices.unshift({line: question.separator || gray('————'), type: 'separator'});
+    choices.unshift({name: 'all', value: question.choices.slice()});
+  }
+
+  while (++idx < len) {
+    var ele = question.choices[idx];
+    if (typeof ele === 'string') {
+      choices.push({ name: ele });
+
+    } else if (isObject(ele)) {
+      choices.push(ele);
+
+    } else {
+      throw new TypeError('expected choice to be a string or object:' + ele);
+    }
+  }
+
+  question.choices = choices;
   return question;
 };
 
